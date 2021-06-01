@@ -4,36 +4,39 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Arrays;
 
-public class MyFrame extends JFrame implements ActionListener {
+public class MyFrame extends JFrame implements ActionListener, KeyListener {
 
-    JTextField text = new JTextField();
-    JLabel result = new JLabel();
+    MyTextField result = new MyTextField("0");
+    //JLabel result = new JLabel();
     String operation="";
     String expression="";
     double partialResult;
-    String partialNum ="";
-    boolean calculated = false;
+    String partialNum ="0";
+    boolean calculated = true;
     String number ="";
     public MyFrame() throws HeadlessException {
         setLayout(new GridLayout(0, 4));
-        JButton comma = new JButton(".");
-        JButton seven = new JButton("7");
-        JButton eight = new JButton("8");
-        JButton nine = new JButton("9");
-        JButton delete = new JButton("C");
-        JButton four = new JButton("4");
-        JButton five = new JButton("5");
-        JButton six = new JButton("6");
-        JButton division = new JButton("/");
-        JButton one = new JButton("1");
-        JButton two = new JButton("2");
-        JButton three = new JButton("3");
-        JButton multiplication = new JButton("*");
-        JButton zero = new JButton("0");
-        JButton minus = new JButton("-");
-        JButton plus = new JButton("+");
-        JButton equals = new JButton("=");
+        MyButton comma = new MyButton(".");
+        MyButton seven = new MyButton("7");
+        MyButton eight = new MyButton("8");
+        MyButton nine = new MyButton("9");
+        MyButton delete = new MyButton("C");
+        MyButton four = new MyButton("4");
+        MyButton five = new MyButton("5");
+        MyButton six = new MyButton("6");
+        MyButton division = new MyButton("/");
+        MyButton one = new MyButton("1");
+        MyButton two = new MyButton("2");
+        MyButton three = new MyButton("3");
+        MyButton multiplication = new MyButton("*");
+        MyButton zero = new MyButton("0");
+        MyButton minus = new MyButton("-");
+        MyButton plus = new MyButton("+");
+        MyButton equals = new MyButton("=");
 
         comma.addActionListener(this);
         seven.addActionListener(this);
@@ -53,7 +56,9 @@ public class MyFrame extends JFrame implements ActionListener {
         plus.addActionListener(this);
         equals.addActionListener(this);
 
-        add(text);
+        addKeyListener(this);
+
+        add(new JLabel());
         add(new JLabel());
         add(result);
         add(comma);
@@ -102,20 +107,23 @@ public class MyFrame extends JFrame implements ActionListener {
         }
         else if (command.equals("C")){
             operation = "";
-            partialNum = "";
+            partialNum = "0";
             number = "";
+            calculated = true;
         }
         else if (command.equals("=")){
             // urbit rovna sa
-            if(!operation.equals("")){
-                partialNum = calculate();
-                number = "";
-                operation = "";
-                calculated = true;
+            if(!partialNum.equals("")) {
+                if (!operation.equals("")) {
+                    partialNum = calculate();
+                    number = "";
+                    operation = "";
+                    calculated = true;
 
+                }
             }
         }
-        else{
+        else if(Arrays.asList("+","-","*","/").contains(command)){
 
             if ( number.equals(""))
             {
@@ -158,6 +166,23 @@ public class MyFrame extends JFrame implements ActionListener {
             }
             return String.valueOf(x/y);
         }
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        System.out.println(e.getKeyChar());
+        String command =  "" + e.getKeyChar();
+        evaluate(command);
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
 
     }
 }
