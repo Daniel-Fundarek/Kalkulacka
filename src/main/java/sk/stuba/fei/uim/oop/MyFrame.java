@@ -13,6 +13,7 @@ public class MyFrame extends JFrame implements ActionListener {
     String expression="";
     double partialResult;
     String partialNum ="";
+    boolean calculated = false;
     String number ="";
     public MyFrame() throws HeadlessException {
         setLayout(new GridLayout(0, 4));
@@ -28,7 +29,7 @@ public class MyFrame extends JFrame implements ActionListener {
         JButton one = new JButton("1");
         JButton two = new JButton("2");
         JButton three = new JButton("3");
-        JButton mutliplication = new JButton("*");
+        JButton multiplication = new JButton("*");
         JButton zero = new JButton("0");
         JButton minus = new JButton("-");
         JButton plus = new JButton("+");
@@ -46,7 +47,7 @@ public class MyFrame extends JFrame implements ActionListener {
         one.addActionListener(this);
         two.addActionListener(this);
         three.addActionListener(this);
-        mutliplication.addActionListener(this);
+        multiplication.addActionListener(this);
         zero.addActionListener(this);
         minus.addActionListener(this);
         plus.addActionListener(this);
@@ -67,7 +68,7 @@ public class MyFrame extends JFrame implements ActionListener {
         add(one);
         add(two);
         add(three);
-        add(mutliplication);
+        add(multiplication);
         add(zero);
         add(minus);
         add(plus);
@@ -85,46 +86,19 @@ public class MyFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         System.out.println(checkForNum(command));
-
-        if(checkForNum(command) || command.equals(".")){
-            partialNum = partialNum + command;
-            System.out.println(partialNum);
-        }
-        else if (command.equals("C")){
-            operation = "";
-            partialNum = "";
-            number = "";
-        }
-        else if (command.equals("=")){
-            // urbit rovna sa
-            if(!operation.equals("")){
-            partialNum = calculate();
-            number = "";
-            operation = "";
-
-            }
-        }
-        else{
-
-            if ( number.equals(""))
-            {
-                number = partialNum;
-                partialNum = "";
-            }
-            else if(!partialNum.equals("")){
-                number = calculate(); // number |operation| partialNum
-                partialNum = "";
-
-            }
-            operation = command;
-        }
-        result.setText(number+operation+partialNum);
+        evaluate(command);
 
     }
     public void evaluate(String command){
         if(checkForNum(command) || command.equals(".")){
-            partialNum = partialNum + command;
-            System.out.println(partialNum);
+            if(calculated){
+                partialNum = command;
+                calculated =false;
+            }
+            else {
+                partialNum = partialNum + command;
+                System.out.println(partialNum);
+            }
         }
         else if (command.equals("C")){
             operation = "";
@@ -137,6 +111,7 @@ public class MyFrame extends JFrame implements ActionListener {
                 partialNum = calculate();
                 number = "";
                 operation = "";
+                calculated = true;
 
             }
         }
