@@ -13,11 +13,10 @@ public class MyFrame extends JFrame implements ActionListener, KeyListener {
     MyTextField result = new MyTextField("0");
     //JLabel result = new JLabel();
     String operation="";
-    String expression="";
-    double partialResult;
     String partialNum ="0";
     boolean calculated = true;
     String number ="";
+    Logic logic = new Logic();
     public MyFrame() throws HeadlessException {
         setLayout(new GridLayout(0, 4));
         MyButton comma = new MyButton(".");
@@ -90,82 +89,9 @@ public class MyFrame extends JFrame implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        System.out.println(checkForNum(command));
-        evaluate(command);
 
-    }
-    public void evaluate(String command){
-        if(checkForNum(command) || command.equals(".")){
-            if(calculated){
-                partialNum = command;
-                calculated =false;
-            }
-            else {
-                partialNum = partialNum + command;
-                System.out.println(partialNum);
-            }
-        }
-        else if (command.equals("C")){
-            operation = "";
-            partialNum = "0";
-            number = "";
-            calculated = true;
-        }
-        else if (command.equals("=")){
-            // urbit rovna sa
-            if(!partialNum.equals("")) {
-                if (!operation.equals("")) {
-                    partialNum = calculate();
-                    number = "";
-                    operation = "";
-                    calculated = true;
-
-                }
-            }
-        }
-        else if(Arrays.asList("+","-","*","/").contains(command)){
-
-            if ( number.equals(""))
-            {
-                number = partialNum;
-                partialNum = "";
-            }
-            else if(!partialNum.equals("")){
-                number = calculate(); // number |operation| partialNum
-                partialNum = "";
-
-            }
-            operation = command;
-        }
-        result.setText(number+operation+partialNum);
-    }
-    public boolean checkForNum(String string) {
-        try {
-            Integer.parseInt(string);
-            return true;
-        }
-            catch(NumberFormatException e){
-            return false;
-        }
-    }
-    public String calculate(){
-        double x,y;
-        x = Double.parseDouble(number);
-        y = Double.parseDouble(partialNum);
-        if(operation.equals("+")){
-            return String.valueOf(x+y);
-        }
-        else if(operation.equals("-")){
-            return String.valueOf(x-y);
-        }
-        else if(operation.equals("*")){
-            return String.valueOf(x*y);
-        }else {
-            if(y == 0 ){
-                return "0";
-            }
-            return String.valueOf(x/y);
-        }
+        System.out.println(logic.checkForNum(command));
+        result.setText(logic.evaluate(command));
 
     }
 
@@ -173,7 +99,8 @@ public class MyFrame extends JFrame implements ActionListener, KeyListener {
     public void keyTyped(KeyEvent e) {
         System.out.println(e.getKeyChar());
         String command =  "" + e.getKeyChar();
-        evaluate(command);
+
+        result.setText(logic.evaluate(command));
     }
 
     @Override
