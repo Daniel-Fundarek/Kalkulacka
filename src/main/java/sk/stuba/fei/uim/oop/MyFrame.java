@@ -18,7 +18,7 @@ public class MyFrame extends JFrame implements ActionListener, KeyListener {
     String number ="";
     Logic logic = new Logic();
     public MyFrame() throws HeadlessException {
-        setLayout(new GridLayout(0, 4));
+        setLayout(new GridLayout(0, 4,5,5));
         MyButton comma = new MyButton(".");
         MyButton seven = new MyButton("7");
         MyButton eight = new MyButton("8");
